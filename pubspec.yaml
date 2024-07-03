@@ -57,10 +57,10 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/sprites/player.png
-    - assets/sprites/enemy.png
-    - assets/sprites/bullet.png
-    - assets/loading_screen.png
+    - assets/images/sprites/player.png
+    - assets/images/sprites/enemy.png
+    - assets/images/sprites/bullet.png
+    - assets/images/loading_screen.png
     # - assets/audio/background_music.mp3
     # - assets/audio/shoot_sound.mp3
   fonts:
