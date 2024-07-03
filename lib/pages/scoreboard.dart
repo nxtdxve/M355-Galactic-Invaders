@@ -14,7 +14,7 @@ class ScoreboardPage extends StatelessWidget {
       body: Consumer<ScoreProvider>(
         builder: (context, scoreProvider, child) {
           return FutureBuilder(
-            future: scoreProvider.initializeFakeScores(),
+            future: scoreProvider.initializeEmptyScores(), // Initialize empty scores
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -56,7 +56,7 @@ class ScoreboardPage extends StatelessWidget {
                                     textAlign: TextAlign.left,
                                   ),
                                 ),
-                                const SizedBox(width: 40),  // Vergrößerter Abstand
+                                const SizedBox(width: 40),  // Abstand
                                 Expanded(
                                   child: Text(
                                     score,

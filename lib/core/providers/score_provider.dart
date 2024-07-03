@@ -25,4 +25,18 @@ class ScoreProvider with ChangeNotifier {
       await fetchTopScores();
     }
   }
+
+  Future<void> initializeEmptyScores() async {
+    if (!_initialized) {
+      await _scoreService.initializeEmptyScores();
+      _initialized = true;
+      await fetchTopScores();
+    }
+  }
+
+  Future<void> clearScores() async {
+    await _scoreService.clearScores();
+    _topScores = [];
+    notifyListeners();
+  }
 }
