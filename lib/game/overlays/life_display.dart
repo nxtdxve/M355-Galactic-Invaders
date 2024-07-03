@@ -22,7 +22,7 @@ class LifeDisplay extends PositionComponent {
       heartSprite.render(
         canvas,
         position: Vector2(i * 40.0, 0), // Adjust the spacing as needed
-        size: Vector2(30, 30), // Adjust the size as needed
+        size: Vector2(24, 20), // Adjust the size as needed
       );
     }
   }
