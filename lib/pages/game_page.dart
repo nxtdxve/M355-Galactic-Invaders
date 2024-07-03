@@ -7,7 +7,10 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Galactic Invaders'),
+        title: const Text(
+          'Galactic Invaders',
+          style: TextStyle(fontFamily: 'ElectronPulse'),
+        ),
       ),
       body: GameWidget(
         game: GalacticInvadersGame(),
