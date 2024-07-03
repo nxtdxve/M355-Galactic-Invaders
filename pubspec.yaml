@@ -60,6 +60,7 @@ flutter:
     - assets/images/sprites/player.png
     - assets/images/sprites/enemy.png
     - assets/images/sprites/bullet.png
+    - assets/images/sprites/heart.png
     - assets/images/loading_screen.png
     # - assets/audio/background_music.mp3
     # - assets/audio/shoot_sound.mp3
