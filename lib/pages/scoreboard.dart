@@ -9,7 +9,7 @@ class ScoreboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scoreboard', style: TextStyle(fontFamily: 'ElectronPulse')),
+        title: const Text('Scoreboard', style: TextStyle(fontFamily: 'ElectronPulse')),
       ),
       body: Consumer<ScoreProvider>(
         builder: (context, scoreProvider, child) {
@@ -17,14 +17,14 @@ class ScoreboardPage extends StatelessWidget {
             future: scoreProvider.initializeFakeScores(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
                 return Column(
                   children: [
-                    SizedBox(height: 20),
-                    Text(
+                    const SizedBox(height: 20),
+                    const Text(
                       'High Scores',
                       style: TextStyle(
                         fontSize: 32,
@@ -33,7 +33,7 @@ class ScoreboardPage extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 40.0),
@@ -49,18 +49,18 @@ class ScoreboardPage extends StatelessWidget {
                                   width: 60,  // Breite für Präfix
                                   child: Text(
                                     prefix,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 24,
                                       fontFamily: 'CosmicAlien',
                                     ),
                                     textAlign: TextAlign.left,
                                   ),
                                 ),
-                                SizedBox(width: 40),  // Vergrößerter Abstand
+                                const SizedBox(width: 40),  // Vergrößerter Abstand
                                 Expanded(
                                   child: Text(
                                     score,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 24,
                                       fontFamily: 'CosmicAlien',
                                     ),
@@ -73,7 +73,7 @@ class ScoreboardPage extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 );
               }

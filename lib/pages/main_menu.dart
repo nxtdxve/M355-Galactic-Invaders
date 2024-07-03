@@ -7,7 +7,7 @@ class MainMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Galactic Invaders',
           style: TextStyle(fontFamily: 'ElectronPulse'),
         ),
@@ -16,7 +16,7 @@ class MainMenu extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -25,11 +25,11 @@ class MainMenu extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                textStyle: TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
+                textStyle: const TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
               ),
-              child: Text('Spiel starten'),
+              child: const Text('Spiel starten'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -38,9 +38,9 @@ class MainMenu extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                textStyle: TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
+                textStyle: const TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
               ),
-              child: Text('Scoreboard anzeigen'),
+              child: const Text('Scoreboard anzeigen'),
             ),
           ],
         ),
