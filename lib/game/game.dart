@@ -21,16 +21,19 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
   int lives = 3;
 
   double enemyDirection = 1.0;
-  double enemySpeed = 50.0;
+  double enemySpeed = 45.0;
   double enemyDrop = 10.0;
   bool isGameOver = false;
   bool hasChangedDirection = false;
+  bool enemiesSpawning = false; // Flag to indicate enemy spawning
 
   late ScoreDisplay scoreDisplay;
   late LifeDisplay lifeDisplay;
 
   double shootTimer = 0.0; // Timer to control enemy shooting frequency
   final double shootInterval = 1; // Interval between enemy shots
+
+  int wave = 1; // Current wave
 
   @override
   Future<void> onLoad() async {
@@ -51,7 +54,9 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     lifeDisplay.position = Vector2(size.x - 150, 20); // Adjust as needed
   }
 
-  void spawnEnemies() {
+  void spawnEnemies() async {
+    enemiesSpawning = true; // Set flag to true before spawning enemies
+
     const int rows = 4;
     const int columns = 8;
     const double enemySpacing = 10.0; // Spacing between enemies
@@ -67,9 +72,13 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
             startX + column * (enemySize + enemySpacing),
             startY + row * (enemySize + enemySpacing),
           );
-        add(enemy);
+        await add(enemy); // Await adding the enemy to ensure they are fully added before proceeding
       }
     }
+
+    // Increase enemy speed slightly for each wave
+    enemySpeed += 5.0 * wave;
+    enemiesSpawning = false; // Reset flag after spawning enemies
   }
 
   @override
@@ -97,6 +106,12 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     if (shootTimer >= shootInterval) {
       shootTimer = 0.0;
       enemyShoot();
+    }
+
+    // Check if all enemies are destroyed to spawn a new wave
+    if (!enemiesSpawning && children.whereType<Enemy>().isEmpty && !isGameOver) {
+      wave++;
+      spawnEnemies();
     }
   }
 
@@ -199,6 +214,8 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
   void reset() {
     score = 0;
     lives = 3;
+    wave = 1;
+    enemySpeed = 50.0; // Reset enemy speed to initial value
     removeAllEnemiesAndBullets();
     player.position = Vector2(size.x / 2 - player.size.x / 2, size.y - player.size.y - 20);
     spawnEnemies();
