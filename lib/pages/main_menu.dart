@@ -26,6 +26,7 @@ class MainMenu extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
+                foregroundColor: Colors.green, // Set the text color to green
               ),
               child: const Text('Spiel starten'),
             ),
@@ -39,6 +40,7 @@ class MainMenu extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 textStyle: const TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
+                foregroundColor: Colors.green, // Set the text color to green
               ),
               child: const Text('Scoreboard anzeigen'),
             ),
