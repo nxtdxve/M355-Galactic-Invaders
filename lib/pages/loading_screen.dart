@@ -8,17 +8,10 @@ class LoadingScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.asset('assets/loading_screen.png'),
-            SizedBox(height: 20),
-            CircularProgressIndicator(),
-            SizedBox(height: 20),
-            Text(
-              'Loading...',
-              style: TextStyle(
-                fontSize: 24,
-                fontFamily: 'ElectronPulse',
-              ),
-            ),
+            Image.asset('assets/images/loading_screen.png'),
+            const SizedBox(height: 20),
+            const CircularProgressIndicator(),
+            const SizedBox(height: 20),
           ],
         ),
       ),
