@@ -1,8 +1,10 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'bullet.dart';
+import '../game.dart';
+import 'enemy_bullet.dart';
 
-class Player extends SpriteComponent with HasGameRef {
+class Player extends SpriteComponent with HasGameRef<GalacticInvadersGame>, CollisionCallbacks {
   late Timer _shootTimer;
 
   @override
@@ -39,5 +41,14 @@ class Player extends SpriteComponent with HasGameRef {
   void shoot() {
     final bullet = Bullet(position: position + Vector2(size.x / 2 - 2.5, -20)); // Adjust the bullet position
     gameRef.add(bullet);
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is EnemyBullet) {
+      other.removeFromParent();
+      gameRef.decreaseLife();
+    }
+    super.onCollision(intersectionPoints, other);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'components/player.dart';
 import 'components/enemy.dart';
+import 'components/enemy_bullet.dart';
 import 'components/bullet.dart';
 import 'overlays/score_display.dart';
 import 'overlays/life_display.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/providers/score_provider.dart';
 import '../pages/main_menu.dart';
+import 'dart:math';
 
 class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetection {
   late Player player;
@@ -27,6 +29,9 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
   late ScoreDisplay scoreDisplay;
   late LifeDisplay lifeDisplay;
 
+  double shootTimer = 0.0; // Timer to control enemy shooting frequency
+  final double shootInterval = 1; // Interval between enemy shots
+
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -43,7 +48,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
 
     // Position the overlays
     scoreDisplay.position = Vector2(20, 20);
-    lifeDisplay.position = Vector2(size.x - 130, 20); // Adjust as needed
+    lifeDisplay.position = Vector2(size.x - 150, 20); // Adjust as needed
   }
 
   void spawnEnemies() {
@@ -86,6 +91,13 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     // Update overlays
     scoreDisplay.score = score;
     lifeDisplay.lives = lives;
+
+    // Handle enemy shooting
+    shootTimer += dt;
+    if (shootTimer >= shootInterval) {
+      shootTimer = 0.0;
+      enemyShoot();
+    }
   }
 
   void moveEnemies(double dt) {
@@ -116,16 +128,44 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     }
   }
 
+  void enemyShoot() {
+    final columns = 8;
+    final List<List<Enemy>> enemyColumns = List.generate(columns, (_) => []);
+    final enemies = children.whereType<Enemy>();
+
+    for (var enemy in enemies) {
+      int column = ((enemy.position.x - enemies.first.position.x) / 40).round(); // Calculate column index
+      if (column >= 0 && column < columns) {
+        enemyColumns[column].add(enemy);
+      }
+    }
+
+    // Filter out empty columns
+    enemyColumns.removeWhere((column) => column.isEmpty);
+
+    if (enemyColumns.isNotEmpty) {
+      final randomColumn = enemyColumns[Random().nextInt(enemyColumns.length)];
+      final lowestEnemy = randomColumn.reduce((value, element) => value.position.y > element.position.y ? value : element);
+
+      final enemyBullet = EnemyBullet()
+        ..position = lowestEnemy.position.clone()
+        ..position.y += lowestEnemy.size.y / 2; // Adjust position to start from the enemy
+      add(enemyBullet);
+    }
+  }
+
   void gameOver() {
     if (isGameOver) return;
 
     isGameOver = true;
     pauseEngine();
+
     final scoreProvider = Provider.of<ScoreProvider>(buildContext!, listen: false);
     scoreProvider.addScore(score);
 
     showDialog(
       context: buildContext!,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
       builder: (context) => AlertDialog(
         title: Text('Game Over'),
         content: Text('Your score: $score'),
@@ -149,8 +189,10 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
         ],
       ),
     ).then((_) {
-      resumeEngine();
-      isGameOver = false;
+      // Ensure the game does not resume automatically
+      if (!isGameOver) {
+        resumeEngine();
+      }
     });
   }
 
@@ -160,15 +202,20 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     removeAllEnemiesAndBullets();
     player.position = Vector2(size.x / 2 - player.size.x / 2, size.y - player.size.y - 20);
     spawnEnemies();
+    isGameOver = false; // Reset game over flag
+    resumeEngine(); // Resume the engine only after resetting
   }
 
   void removeAllEnemiesAndBullets() {
     children.whereType<Enemy>().forEach((enemy) => enemy.removeFromParent());
     children.whereType<Bullet>().forEach((bullet) => bullet.removeFromParent());
+    children.whereType<EnemyBullet>().forEach((bullet) => bullet.removeFromParent());
   }
 
   @override
   void onPanStart(DragStartInfo info) {
+    if (isGameOver) return;
+
     final tapPosition = info.eventPosition.global;
     if (tapPosition.x < size.x / 2) {
       moveLeft = true;
@@ -179,6 +226,8 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
 
   @override
   void onPanUpdate(DragUpdateInfo info) {
+    if (isGameOver) return;
+
     final tapPosition = info.eventPosition.global;
     moveLeft = tapPosition.x < size.x / 2;
     moveRight = tapPosition.x >= size.x / 2;
