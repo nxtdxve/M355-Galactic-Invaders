@@ -39,20 +39,20 @@ class MainMenu extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
               SizedBox(
                 width: 250, // Fixed width for the buttons
-                child: ElevatedButton(
+                child: OutlinedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const GamePage()),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
+                  style: OutlinedButton.styleFrom(
                     textStyle: const TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
-                    backgroundColor: Colors.green, // Button background color
-                    foregroundColor: Colors.white, // Button text color
+                    side: const BorderSide(color: Colors.green, width: 2), // Button outline color
+                    foregroundColor: Colors.green, // Button text color
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -64,17 +64,17 @@ class MainMenu extends StatelessWidget {
               const SizedBox(height: 20),
               SizedBox(
                 width: 250, // Fixed width for the buttons
-                child: ElevatedButton(
+                child: OutlinedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ScoreboardPage()),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
+                  style: OutlinedButton.styleFrom(
                     textStyle: const TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
-                    backgroundColor: Colors.green, // Button background color
-                    foregroundColor: Colors.white, // Button text color
+                    side: const BorderSide(color: Colors.green, width: 2), // Button outline color
+                    foregroundColor: Colors.green, // Button text color
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
