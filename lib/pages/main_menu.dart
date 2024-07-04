@@ -3,6 +3,8 @@ import 'game_page.dart';
 import 'scoreboard.dart';
 
 class MainMenu extends StatelessWidget {
+  const MainMenu({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +23,7 @@ class MainMenu extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => GamePage()),
+                  MaterialPageRoute(builder: (context) => const GamePage()),
                 );
               },
               style: ElevatedButton.styleFrom(

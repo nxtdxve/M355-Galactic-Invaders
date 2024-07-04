@@ -3,6 +3,8 @@ import 'package:flame/game.dart';
 import '../game/game.dart';
 
 class GamePage extends StatelessWidget {
+  const GamePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

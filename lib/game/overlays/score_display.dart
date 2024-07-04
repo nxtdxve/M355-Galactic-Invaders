@@ -9,7 +9,7 @@ class ScoreDisplay extends TextComponent {
       : super(
           text: 'SCORE: $score',
           textRenderer: TextPaint(
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 22,
               fontFamily: 'CosmicAlien',
               color: Colors.white,

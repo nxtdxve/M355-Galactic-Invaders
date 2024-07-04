@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: _isLoading ? LoadingScreen() : MainMenu(),
+      home: _isLoading ? const LoadingScreen() : const MainMenu(),
     );
   }
 }

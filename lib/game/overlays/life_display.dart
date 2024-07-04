@@ -1,6 +1,5 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
-import 'package:flame/sprite.dart';
 
 class LifeDisplay extends PositionComponent {
   int lives;

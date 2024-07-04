@@ -31,7 +31,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
   late LifeDisplay lifeDisplay;
 
   double shootTimer = 0.0; // Timer to control enemy shooting frequency
-  final double shootInterval = 1; // Interval between enemy shots
+  double shootInterval = 1; // Interval between enemy shots
 
   int wave = 1; // Current wave
 
@@ -63,7 +63,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     const double enemySize = 30.0; // Size of each enemy
 
     final double startX = (size.x - (columns * enemySize + (columns - 1) * enemySpacing)) / 2;
-    final double startY = 50.0; // Adjust the starting Y position to leave space for the score and health bar
+    const double startY = 50.0; // Adjust the starting Y position to leave space for the score and health bar
 
     for (int row = 0; row < rows; row++) {
       for (int column = 0; column < columns; column++) {
@@ -76,8 +76,9 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
       }
     }
 
-    // Increase enemy speed slightly for each wave
-    enemySpeed += 5.0 * wave;
+    enemySpeed += 5.0 * wave; // Increase enemy speed slightly for each wave
+    shootInterval -= 0.08 * wave; // Decrease the shooting interval for each wave
+
     enemiesSpawning = false; // Reset flag after spawning enemies
   }
 
@@ -144,7 +145,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
   }
 
   void enemyShoot() {
-    final columns = 8;
+    const columns = 8;
     final List<List<Enemy>> enemyColumns = List.generate(columns, (_) => []);
     final enemies = children.whereType<Enemy>();
 
@@ -182,7 +183,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
       context: buildContext!,
       barrierDismissible: false, // Prevent dismissing by tapping outside
       builder: (context) => AlertDialog(
-        title: Text('Game Over'),
+        title: const Text('Game Over'),
         content: Text('Your score: $score'),
         actions: [
           TextButton(
@@ -190,16 +191,16 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
               Navigator.of(context).pop();
               reset();
             },
-            child: Text('Restart'),
+            child: const Text('Restart'),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => MainMenu()),
+                MaterialPageRoute(builder: (context) => const MainMenu()),
               );
             },
-            child: Text('Main Menu'),
+            child: const Text('Main Menu'),
           ),
         ],
       ),
@@ -215,7 +216,8 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     score = 0;
     lives = 3;
     wave = 1;
-    enemySpeed = 50.0; // Reset enemy speed to initial value
+    enemySpeed = 45.0; // Reset enemy speed to initial value
+    shootInterval = 1.0; // Reset shooting interval to initial value
     removeAllEnemiesAndBullets();
     player.position = Vector2(size.x / 2 - player.size.x / 2, size.y - player.size.y - 20);
     spawnEnemies();
@@ -263,7 +265,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
   }
 
   void increaseScore(int points) {
-    score += points;
+    score += (points * wave) ~/ 2;
   }
 
   void decreaseLife() {
