@@ -12,7 +12,7 @@ class Bullet extends SpriteComponent with HasGameRef {
 
   @override
   Future<void> onLoad() async {
-    sprite = await gameRef.loadSprite('sprites/bullet.png'); // Ensure you have a bullet.png in your assets/sprites
+    sprite = await gameRef.loadSprite('sprites/bullet.png');
     add(RectangleHitbox());
   }
 

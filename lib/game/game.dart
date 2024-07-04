@@ -71,7 +71,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     add(lifeDisplay);
 
     // Position the overlays
-    scoreDisplay.position = Vector2(20, 20);
+    scoreDisplay.position = Vector2(20, 20); // Adjust as needed
     lifeDisplay.position = Vector2(size.x - 150, 20); // Adjust as needed
   }
 
