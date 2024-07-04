@@ -10,44 +10,60 @@ import 'overlays/score_display.dart';
 import 'overlays/life_display.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../core/providers/score_provider.dart';
-import '../pages/main_menu.dart';
+import '../../core/providers/score_provider.dart';
+import '../../pages/main_menu.dart';
 import 'dart:math';
 
+/// Main game class for Galactic Invaders
 class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetection {
+  // Player and game state
   late Player player;
   bool moveLeft = false;
   bool moveRight = false;
   int score = 0;
   int lives = 3;
+  bool isGameOver = false;
+  bool enemiesSpawning = false; // Flag to indicate enemy spawning
 
+  // Enemy movement
   double enemyDirection = 1.0;
   double enemySpeed = 45.0;
   double enemyDrop = 10.0;
-  bool isGameOver = false;
   bool hasChangedDirection = false;
-  bool enemiesSpawning = false; // Flag to indicate enemy spawning
 
+  // Wave and shooting
+  double shootTimer = 0.0; // Timer to control enemy shooting frequency
+  double shootInterval = 1.0; // Interval between enemy shots
+  int wave = 1; // Current wave
+
+  // UI elements
   late ScoreDisplay scoreDisplay;
   late LifeDisplay lifeDisplay;
 
-  double shootTimer = 0.0; // Timer to control enemy shooting frequency
-  double shootInterval = 1.0; // Interval between enemy shots
-
-  int wave = 1; // Current wave
-
+  /// Loads the game components
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    _initializePlayer();
+    _initializeOverlays();
+    _startBackgroundMusic();
+    spawnEnemies();
+  }
+
+  @override
+  void onRemove() {
+    super.onRemove();
+    FlameAudio.bgm.stop(); // Stop background music when the game is removed
+  }
+
+  /// Initialize player component
+  void _initializePlayer() async {
     player = Player();
     await add(player);
-    spawnEnemies();
+  }
 
-    // Load and play background music
-    FlameAudio.bgm.initialize();
-    FlameAudio.bgm.play('background_music.mp3', volume: 0.25); // Adjust volume as needed
-
-    // Add score and life overlays
+  /// Initialize score and life overlays
+  void _initializeOverlays() {
     scoreDisplay = ScoreDisplay(score: score);
     lifeDisplay = LifeDisplay(lives: lives);
 
@@ -59,12 +75,13 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     lifeDisplay.position = Vector2(size.x - 150, 20); // Adjust as needed
   }
 
-  @override
-  void onRemove() {
-    super.onRemove();
-    FlameAudio.bgm.stop(); // Stop background music when the game is removed
+  /// Start background music
+  void _startBackgroundMusic() {
+    FlameAudio.bgm.initialize();
+    FlameAudio.bgm.play('background_music.mp3', volume: 0.4); // Adjust volume as needed
   }
 
+  /// Spawn enemies on the screen
   void spawnEnemies() async {
     enemiesSpawning = true; // Set flag to true before spawning enemies
 
@@ -88,16 +105,26 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     }
 
     enemySpeed += 5.0 * wave; // Increase enemy speed slightly for each wave
-    shootInterval -= 0.08 * wave; // Decrease the shooting interval for each wave
+    shootInterval -= 0.04 * wave; // Decrease the shooting interval for each wave
 
     enemiesSpawning = false; // Reset flag after spawning enemies
   }
 
+  /// Update the game state
   @override
   void update(double dt) {
     super.update(dt);
     if (isGameOver) return;
 
+    _updatePlayerMovement(dt);
+    _moveEnemies(dt);
+    _updateOverlays();
+    _handleEnemyShooting(dt);
+    _checkForNextWave();
+  }
+
+  /// Update player movement based on input
+  void _updatePlayerMovement(double dt) {
     double delta = 200 * dt; // Adjust speed as needed
 
     if (moveLeft) {
@@ -106,28 +133,10 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     if (moveRight) {
       player.moveRight(delta);
     }
-
-    moveEnemies(dt);
-
-    // Update overlays
-    scoreDisplay.score = score;
-    lifeDisplay.lives = lives;
-
-    // Handle enemy shooting
-    shootTimer += dt;
-    if (shootTimer >= shootInterval) {
-      shootTimer = 0.0;
-      enemyShoot();
-    }
-
-    // Check if all enemies are destroyed to spawn a new wave
-    if (!enemiesSpawning && children.whereType<Enemy>().isEmpty && !isGameOver) {
-      wave++;
-      spawnEnemies();
-    }
   }
 
-  void moveEnemies(double dt) {
+  /// Move enemies on the screen
+  void _moveEnemies(double dt) {
     final enemies = children.whereType<Enemy>();
 
     bool changeDirection = false;
@@ -146,7 +155,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
       for (var enemy in enemies) {
         enemy.position.y += enemyDrop;
         if (enemy.position.y + enemy.size.y > player.position.y) {
-          gameOver();
+          _gameOver();
         }
       }
       hasChangedDirection = true;
@@ -155,7 +164,31 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     }
   }
 
-  void enemyShoot() {
+  /// Update score and life overlays
+  void _updateOverlays() {
+    scoreDisplay.score = score;
+    lifeDisplay.lives = lives;
+  }
+
+  /// Handle enemy shooting
+  void _handleEnemyShooting(double dt) {
+    shootTimer += dt;
+    if (shootTimer >= shootInterval) {
+      shootTimer = 0.0;
+      _enemyShoot();
+    }
+  }
+
+  /// Check if all enemies are destroyed to spawn a new wave
+  void _checkForNextWave() {
+    if (!enemiesSpawning && children.whereType<Enemy>().isEmpty && !isGameOver) {
+      wave++;
+      spawnEnemies();
+    }
+  }
+
+  /// Handle enemy shooting logic
+  void _enemyShoot() {
     const columns = 8;
     final List<List<Enemy>> enemyColumns = List.generate(columns, (_) => []);
     final enemies = children.whereType<Enemy>();
@@ -181,7 +214,8 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     }
   }
 
-  void gameOver() {
+  /// End the game and show the game over screen
+  void _gameOver() {
     if (isGameOver) return;
 
     isGameOver = true;
@@ -202,7 +236,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              reset();
+              _reset();
             },
             child: const Text('Restart'),
           ),
@@ -225,25 +259,28 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     });
   }
 
-  void reset() {
+  /// Reset the game to its initial state
+  void _reset() {
     score = 0;
     lives = 3;
     wave = 1;
     enemySpeed = 45.0; // Reset enemy speed to initial value
     shootInterval = 1.0; // Reset shooting interval to initial value
-    removeAllEnemiesAndBullets();
+    _removeAllEnemiesAndBullets();
     player.position = Vector2(size.x / 2 - player.size.x / 2, size.y - player.size.y - 20);
     spawnEnemies();
     isGameOver = false; // Reset game over flag
     resumeEngine(); // Resume the engine only after resetting
   }
 
-  void removeAllEnemiesAndBullets() {
+  /// Remove all enemies and bullets from the game
+  void _removeAllEnemiesAndBullets() {
     children.whereType<Enemy>().forEach((enemy) => enemy.removeFromParent());
     children.whereType<Bullet>().forEach((bullet) => bullet.removeFromParent());
     children.whereType<EnemyBullet>().forEach((bullet) => bullet.removeFromParent());
   }
 
+  /// Handle touch input start
   @override
   void onPanStart(DragStartInfo info) {
     if (isGameOver) return;
@@ -256,6 +293,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     }
   }
 
+  /// Handle touch input update
   @override
   void onPanUpdate(DragUpdateInfo info) {
     if (isGameOver) return;
@@ -265,6 +303,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     moveRight = tapPosition.x >= size.x / 2;
   }
 
+  /// Handle touch input end
   @override
   void onPanEnd(DragEndInfo info) {
     moveLeft = false;
@@ -277,14 +316,16 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     moveRight = false;
   }
 
+  /// Increase the player's score
   void increaseScore(int points) {
     score += (points * wave) ~/ 2;
   }
 
+  /// Decrease the player's life
   void decreaseLife() {
     lives -= 1;
     if (lives <= 0) {
-      gameOver();
+      _gameOver();
     }
   }
 }

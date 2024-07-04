@@ -13,6 +13,8 @@ class GamePage extends StatelessWidget {
           'Galactic Invaders',
           style: TextStyle(fontFamily: 'ElectronPulse'),
         ),
+        backgroundColor: Colors.black,
+        centerTitle: true,
       ),
       body: GameWidget(
         game: GalacticInvadersGame(),
