@@ -1,7 +1,8 @@
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'bullet.dart';
+import 'package:flame/collisions.dart';
+import 'package:flame_audio/flame_audio.dart';
 import '../game.dart';
+import 'bullet.dart';
 import 'enemy_bullet.dart';
 
 class Player extends SpriteComponent with HasGameRef<GalacticInvadersGame>, CollisionCallbacks {
@@ -41,6 +42,7 @@ class Player extends SpriteComponent with HasGameRef<GalacticInvadersGame>, Coll
   void shoot() {
     final bullet = Bullet(position: position + Vector2(size.x / 2 - 2.5, -20)); // Adjust the bullet position
     gameRef.add(bullet);
+    FlameAudio.play('shoot_sound.wav'); // Play shoot sound
   }
 
   @override

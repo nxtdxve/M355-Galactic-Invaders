@@ -39,6 +39,8 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.2.3
   flutter_launcher_icons: ^0.13.1
+  vibration: ^1.9.0
+  flame_audio: ^2.10.2
 
 dev_dependencies:
   flutter_test:
@@ -62,8 +64,10 @@ flutter:
     - assets/images/sprites/bullet.png
     - assets/images/sprites/heart.png
     - assets/images/loading_screen.png
-    # - assets/audio/background_music.mp3
-    # - assets/audio/shoot_sound.mp3
+    - assets/audio/background_music.mp3
+    - assets/audio/shoot_sound.wav
+    - assets/audio/game_over.wav
+    - assets/audio/hit_sound.mp3
   fonts:
     - family: CosmicAlien
       fonts:

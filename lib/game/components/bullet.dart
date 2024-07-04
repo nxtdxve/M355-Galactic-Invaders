@@ -1,12 +1,13 @@
 import 'package:flame/components.dart';
 import 'package:flame/collisions.dart';
-import 'package:myapp/game/components/enemy.dart';
-import 'package:myapp/game/game.dart';
+import 'package:flame_audio/flame_audio.dart';
+import 'enemy.dart';
+import '../game.dart';
 
 class Bullet extends SpriteComponent with HasGameRef {
   Bullet({required Vector2 position}) {
     this.position = position;
-    size = Vector2(2, 12); // Größe des Schusses
+    size = Vector2(2, 12); // Size of the bullet
   }
 
   @override
@@ -33,6 +34,7 @@ class Bullet extends SpriteComponent with HasGameRef {
       if (enemy.toRect().overlaps(toRect())) {
         enemy.removeFromParent();
         removeFromParent();
+        FlameAudio.play('hit_sound.mp3'); // Play hit sound
         (gameRef as GalacticInvadersGame).increaseScore(100);
       }
     }

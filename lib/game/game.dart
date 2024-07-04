@@ -1,6 +1,7 @@
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'components/player.dart';
 import 'components/enemy.dart';
 import 'components/enemy_bullet.dart';
@@ -31,7 +32,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
   late LifeDisplay lifeDisplay;
 
   double shootTimer = 0.0; // Timer to control enemy shooting frequency
-  double shootInterval = 1; // Interval between enemy shots
+  double shootInterval = 1.0; // Interval between enemy shots
 
   int wave = 1; // Current wave
 
@@ -41,6 +42,10 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     player = Player();
     await add(player);
     spawnEnemies();
+
+    // Load and play background music
+    FlameAudio.bgm.initialize();
+    FlameAudio.bgm.play('background_music.mp3', volume: 0.25); // Adjust volume as needed
 
     // Add score and life overlays
     scoreDisplay = ScoreDisplay(score: score);
@@ -52,6 +57,12 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
     // Position the overlays
     scoreDisplay.position = Vector2(20, 20);
     lifeDisplay.position = Vector2(size.x - 150, 20); // Adjust as needed
+  }
+
+  @override
+  void onRemove() {
+    super.onRemove();
+    FlameAudio.bgm.stop(); // Stop background music when the game is removed
   }
 
   void spawnEnemies() async {
@@ -175,6 +186,8 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
 
     isGameOver = true;
     pauseEngine();
+
+    FlameAudio.play('game_over.wav'); // Play game over sound
 
     final scoreProvider = Provider.of<ScoreProvider>(buildContext!, listen: false);
     scoreProvider.addScore(score);
