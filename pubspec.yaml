@@ -65,7 +65,6 @@ flutter:
     - assets/images/sprites/heart.png
     - assets/images/loading_screen.png
     - assets/audio/background_music.mp3
-    - assets/audio/shoot_sound.wav
     - assets/audio/game_over.wav
     - assets/audio/hit_sound.mp3
   fonts:
