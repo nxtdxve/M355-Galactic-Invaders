@@ -1,18 +1,20 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame_audio/flame_audio.dart';
+
+import '../../core/providers/score_provider.dart';
+import '../../pages/main_menu.dart';
 import 'components/player.dart';
 import 'components/enemy.dart';
 import 'components/enemy_bullet.dart';
 import 'components/bullet.dart';
 import 'overlays/score_display.dart';
 import 'overlays/life_display.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../core/providers/score_provider.dart';
-import '../../pages/main_menu.dart';
-import 'dart:math';
 
 /// Main game class for Galactic Invaders
 class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetection {
@@ -224,14 +226,27 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
       context: buildContext!,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Game Paused'),
+        backgroundColor: const Color(0xFF090C1A),
+        title: const Text(
+          'Game Paused',
+          style: TextStyle(
+            fontFamily: 'CosmicAlien',
+            color: Colors.greenAccent,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               resumeGame();
             },
-            child: const Text('Resume'),
+            child: const Text(
+              'Resume',
+              style: TextStyle(
+                fontFamily: 'CosmicAlien',
+                color: Colors.greenAccent,
+              ),
+            ),
           ),
         ],
       ),
@@ -261,15 +276,34 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
       context: buildContext!,
       barrierDismissible: false, // Prevent dismissing by tapping outside
       builder: (context) => AlertDialog(
-        title: const Text('Game Over'),
-        content: Text('Your score: $score'),
+        backgroundColor: const Color(0xFF090C1A),
+        title: const Text(
+          'Game Over',
+          style: TextStyle(
+            fontFamily: 'CosmicAlien',
+            color: Colors.greenAccent,
+          ),
+        ),
+        content: Text(
+          'Your score: $score',
+          style: const TextStyle(
+            fontFamily: 'CosmicAlien',
+            color: Colors.greenAccent,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               _reset();
             },
-            child: const Text('Restart'),
+            child: const Text(
+              'Restart',
+              style: TextStyle(
+                fontFamily: 'CosmicAlien',
+                color: Colors.greenAccent,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -278,7 +312,13 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
                 MaterialPageRoute(builder: (context) => const MainMenu()),
               );
             },
-            child: const Text('Main Menu'),
+            child: const Text(
+              'Main Menu',
+              style: TextStyle(
+                fontFamily: 'CosmicAlien',
+                color: Colors.greenAccent,
+              ),
+            ),
           ),
         ],
       ),
