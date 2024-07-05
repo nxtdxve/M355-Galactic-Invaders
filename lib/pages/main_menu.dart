@@ -8,14 +8,6 @@ class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Galactic Invaders',
-          style: TextStyle(fontFamily: 'ElectronPulse'),
-        ),
-        backgroundColor: Colors.black,
-        centerTitle: true,
-      ),
       body: Container(
         color: const Color(0xFF121212), // Very dark gray background color
         child: Center(

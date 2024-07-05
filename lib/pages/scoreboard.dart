@@ -11,10 +11,13 @@ class ScoreboardPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Scoreboard',
-          style: TextStyle(fontFamily: 'ElectronPulse'),
+          style: TextStyle(fontFamily: 'ElectronPulse', color: Colors.grey),
         ),
         backgroundColor: Colors.black,
         centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Colors.grey, // Set the color of the back button to grey
+        ),
       ),
       body: Container(
         color: const Color(0xFF121212), // Very dark gray background color

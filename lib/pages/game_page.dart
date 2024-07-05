@@ -11,10 +11,13 @@ class GamePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Galactic Invaders',
-          style: TextStyle(fontFamily: 'ElectronPulse'),
+          style: TextStyle(fontFamily: 'ElectronPulse', color: Colors.grey),
         ),
         backgroundColor: Colors.black,
         centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Colors.grey, // Set the color of the back button to grey
+        ),
       ),
       body: GameWidget(
         game: GalacticInvadersGame(),
