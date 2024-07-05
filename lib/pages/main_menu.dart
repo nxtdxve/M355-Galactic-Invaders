@@ -9,91 +9,107 @@ class MainMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color(0xFF121212), // Very dark gray background color
-        child: Center(
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(height: 40),
-                  const Text(
-                    'Galactic Invaders',
-                    style: TextStyle(
-                      fontFamily: 'ElectronPulse',
-                      fontSize: 50,
-                      color: Colors.greenAccent,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: Colors.black,
-                          offset: Offset(3.0, 3.0),
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: 250, // Fixed width for the buttons
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const GamePage()),
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        textStyle: const TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
-                        side: const BorderSide(color: Colors.green, width: 2), // Button outline color
-                        foregroundColor: Colors.green, // Button text color
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: const Text('Spiel starten'),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: 250, // Fixed width for the buttons
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ScoreboardPage()),
-                        );
-                      },
-                      style: OutlinedButton.styleFrom(
-                        textStyle: const TextStyle(fontFamily: 'CosmicAlien', fontSize: 20),
-                        side: const BorderSide(color: Colors.green, width: 2), // Button outline color
-                        foregroundColor: Colors.green, // Button text color
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: const Text('Scoreboard'),
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                top: 100,
-                right: 35,
-                child: Transform.rotate(
-                  angle: 0.55, // Around 31 degrees in radian
-                  child: Image.asset(
-                    'assets/images/sprites/enemy.png',
-                    width: 70,
-                    height: 70,
-                  ),
-                ),
-              ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF0A0E21),  // Very dark blue-black
+              Color(0xFF090C1A),  // Even darker blue-black
             ],
           ),
         ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 60),
+                Text(
+                  'Galactic\nInvaders',
+                  style: TextStyle(
+                    fontFamily: 'ElectronPulse',
+                    fontSize: 48,
+                    height: 1.2,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.greenAccent,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 20.0,
+                        color: Colors.greenAccent.withOpacity(0.6),
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 60),
+                _buildButton(
+                  context: context,
+                  text: 'Play Game',
+                  icon: Icons.play_arrow,
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const GamePage())),
+                ),
+                const SizedBox(height: 24),
+                _buildButton(
+                  context: context,
+                  text: 'Scoreboard',
+                  icon: Icons.leaderboard,
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ScoreboardPage())),
+                ),
+                const Spacer(),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Transform.rotate(
+                    angle: -0.2,
+                    child: Image.asset(
+                      'assets/images/sprites/enemy.png',
+                      width: 100,
+                      height: 100,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 40),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton({
+    required BuildContext context,
+    required String text,
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.greenAccent,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        elevation: 5,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 24),
+          const SizedBox(width: 12),
+          Text(
+            text,
+            style: const TextStyle(
+              fontFamily: 'CosmicAlien',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }

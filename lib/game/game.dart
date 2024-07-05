@@ -24,6 +24,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
   int lives = 3;
   bool isGameOver = false;
   bool enemiesSpawning = false; // Flag to indicate enemy spawning
+  bool isPaused = false; // Flag to indicate if the game is paused
 
   // Enemy movement
   double enemyDirection = 1.0;
@@ -114,7 +115,7 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
   @override
   void update(double dt) {
     super.update(dt);
-    if (isGameOver) return;
+    if (isGameOver || isPaused) return; // Skip update if the game is over or paused
 
     _updatePlayerMovement(dt);
     _moveEnemies(dt);
@@ -212,6 +213,36 @@ class GalacticInvadersGame extends FlameGame with PanDetector, HasCollisionDetec
         ..position.y += lowestEnemy.size.y / 2; // Adjust position to start from the enemy
       add(enemyBullet);
     }
+  }
+
+  /// Pause the game
+  void pauseGame() {
+    isPaused = true;
+    pauseEngine();
+    FlameAudio.bgm.pause();
+    showDialog(
+      context: buildContext!,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Game Paused'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              resumeGame();
+            },
+            child: const Text('Resume'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Resume the game
+  void resumeGame() {
+    isPaused = false;
+    resumeEngine();
+    FlameAudio.bgm.resume();
   }
 
   /// End the game and show the game over screen

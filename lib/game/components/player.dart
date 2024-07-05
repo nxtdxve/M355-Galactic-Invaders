@@ -14,7 +14,7 @@ class Player extends SpriteComponent with HasGameRef<GalacticInvadersGame>, Coll
     position = Vector2(gameRef.size.x / 2 - size.x / 2, gameRef.size.y - size.y - 60);
     add(RectangleHitbox());
 
-    _shootTimer = Timer(0.44, repeat: true, onTick: shoot); // Adjust the interval as needed
+    _shootTimer = Timer(0.4, repeat: true, onTick: shoot); // Adjust the interval as needed
     _shootTimer.start();
   }
 
